@@ -69,8 +69,8 @@ QUOTE = "The lock on the old door could only take short keys"
 
 
 def encrypt(key, iv, plaintext):
-    ''' 
-    '''
+    ''' Function encrypt '''
+    
     padder = padding.PKCS7(CIPHER_BLOCK_LENGTH).padder()
     padded_plaintext = padder.update(plaintext)
     padded_plaintext += padder.finalize()

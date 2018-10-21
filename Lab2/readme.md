@@ -36,7 +36,7 @@ iv = os.urandom(IV_BLOCK_SIZE)
 enc = encrypt(key, iv, str.encode(QUOTE))
 ```
 
-### Zadatak
+## Zadatak
 
 U nastavku se nalazi jednostavan python modul ``encrypt_lab2.py`` koji je korišten za šifriranje teksta/vica. Vaš zadatak je razumijeti kod za šifriranje koji je dan u nastavku, te kreirati modul (skriptu) koja će dešifrirati tekst koji se nalazi u datoteci u direktoriju Student.
 
@@ -95,6 +95,7 @@ if __name__ =='__main__':
 
     f_out = open(filename + ".enc", 'wb')
     f_out.write(key)
+    f_out.write(iv)
     f_out.write(enc)
     f_out.close()
 ```

@@ -1,34 +1,40 @@
+# SRP - Lab 2: Symmetric crypto challenge
 
-# SRP - Lab 2: Crypto challenge - Simetrična kriptografija
+U sklopu vježbe student će riješiti jednostavan _crypto_ izazov. Student će pri tome koristiti _python_ programski jezik. Kroz ovu vježbu student će se upoznati s osnovama **simetrične kriptografije**.
 
-U sklopu današnje vježbe student će morati riješiti *crypto challenge*. Rješenje se može realizirati u bilo kojem programskom jeziku, ali preporučujemo korištenje ``python`` programskog okruženja. Ova vježba upoznaje studente sa osnovama **simetrične kriptografije**, točnije za blok šiframa fiksne duljine koji se danas koriste u većini modernih kriptografskih sustava.
+## Uvod
 
-Jedna od najpopularnijih ekripcijskih algoritama koji implementira blok šifre fiksne duljine je **AES** algoritam, te podupire rad s blokovima duljine 128 bitova i ključevima duljine 128, 192 i 256 bitova. Blok šifra u osnovi "razbije" ulaznu poruku u seriju sekvencijalnih blokova odgovarajuće dužine (npr. 128 bita), te procesira ove blokove po principu "jedan po jedan". Kod **AES-CBC** enkripcijskog moda plantext blokovi ulančavaju (eng. *chaining*) kako je prikazano na slici u nastavku.
+Zadatak studenta je dešifrirati dani _ciphertext_ dobiven enkripcijom odgovarajućeg _plaintext_-a. Za enkripciju je korištena AES šifra/enkripcijski algoritam u tzv. CBC enkripcijskom modu; student ne treba poznavati detalje AES algoritma ni CBC moda za uspješno rješavanje zadatka.
 
-<p align="center">
-  <img width="500" src="https://raw.githubusercontent.com/mcagalj/CNS-2017-18/master/img/cbc.PNG">
-</p>
-
-Zadatak studenta je dešifrirati tekst/vic enkriptiran **AES** šifrom u **CBC** enkripcijskom modu. Za svakog studenta je kreirana datoteka u direktoriju [Studenti](Studenti) na github repozitoriju koja sadrži šifrirani tekst. Kako bi student znao koja datoteka njemu pripada naziv datoteke je kreirano korištenjem kriptografske hash funkcije **SHA-256** na sljedeći način:
-
+Za svakog studenta kreirana je datoteka u direktoriju [Studenti](Studenti) koja sadrži šifrirani _plaintext_. Datoteke imaju ekstenziju `.enc` a ime datoteke generirano je primjenom kriptografske _hash_ funkcije SHA-256 kako je prikazano u nastavku:
 
 ```python
-hash("PerkovicToni" + "SALT") = f3f496e59923ea2f120edbe0b603fac4719bb01e250e9534e401af6f1edb0a5e
+hash("PerkovicToni" + <SALT>) = f3f496e59923ea2f120edbe0b603fac4719bb01e250e9534e401af6f1edb0a5e
 ```
 
-gdje je ``SALT`` vrijednost koju će vam profesori dati na vježbama. **NAPOMENA:** Primjetite kako nema razmaka između prezimena i imena te nisu korištena HR slova (čćžšđ) dok je ime studenta formatirano po principu ``PrezimeIme``. Da biste saznali ime datoteke koje pripada svakom studentu, u python okruženju napravite sljedeće:
+gdje je `<SALT>` vrijednost koju će vam profesori dati na vježbama.
+
+> **NAPOMENA:**  
+> Ime studenta formatirano je kao: `<Prezime><Ime>`. Primjetite kako nema razmaka između prezimena i imena, te da nisu korištena dijakritička slova (čćžšđ).
+
+> **ZAŠTO NAVEDENA KOMPLIKACIJA?**  
+> Nastojali smo osigurati anonimnost studentata, odnosno izbjeći objavljivanje stvarnih imena na javnom/otvorenom forumu.
+
+Ime vlastite datoteke možete saznati izvršavanjem sljedećeg koda u `python shell`-u:
 
 ```python
 >>> from cryptography.hazmat.primitives import hashes
 >>> from cryptography.hazmat.backends import default_backend
->>> imeStudenta = "PerkovicToni" + "SALT" # NAPOMENA: SALT dobivate od profesora
+>>> imeStudenta = <PrezimeIme> + <SALT> # NAPOMENA: SALT dobivate od profesora
 >>> digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
 >>> digest.update(str.encode(imeStudenta))
 >>> filename = digest.finalize().hex()
 >>> print(filename)
 ```
 
-Nadalje, za ekpripciju teksta kreirana je funkcija ``encrypt`` koja uzima 128 bitni inicijalizacijski vektor (``iv``), odgovarajući *plaintext* (``QUOTE``) te ga šifrira algoritmom **AES** u **CBC** modu tajnim 256 bitnim ključem (32 byte-a) i vraća vam odgovarajući ciphertext (``enc``).
+## Postupak enkripcije _plaintext_-a (vašeg izazova)
+
+Za enkripciju _plaintext_-ova kreirana je jednostavna python skripta/modul `encrypt_lab2.py`. U skripti koristimo modul [cryptography](https://cryptography.io), s kojim smo se upoznali u prethodnoj vježbi. Za potrebe ove vježbe, u skripti `encrypt_lab2.py` definirana je funkcija `encrypt` koja uzima 128 bitni inicijalizacijski vektor (`iv`), odgovarajući _plaintext_ (`QUOTE`) te ga šifrira/enkriptira tajnim 256 bitnim ključem i vraća odgovarajući ciphertext (`enc`).
 
 ```python
 key = os.urandom(KEY_BLOCK_SIZE)
@@ -36,9 +42,28 @@ iv = os.urandom(IV_BLOCK_SIZE)
 enc = encrypt(key, iv, str.encode(QUOTE))
 ```
 
-## Zadatak
+Navedena skripta potom pohranjuje dobiveni _ciphertext_, enkripcijski ključ, inicijalizacijski vektor u odgovarajuću datoteku.
 
-U nastavku se nalazi jednostavan python modul ``encrypt_lab2.py`` koji je korišten za šifriranje teksta/vica. Vaš zadatak je razumijeti kod za šifriranje koji je dan u nastavku, te kreirati modul (skriptu) koja će dešifrirati tekst koji se nalazi u datoteci u direktoriju [Studenti](Studenti). **HINT:** Za potrebe rada s kriptografskim primitivima (enkripcijskim algoritmima te kriptografskim hash funkcijama) koristili smo Python paket [cryptography](https://cryptography.io), koji nudi objašnjenje korištenja kriptografskih primitiva sa primjerima (receptima).
+```python
+f_out = open(filename + ".enc", 'wb')
+f_out.write(key)
+f_out.write(iv)
+f_out.write(enc)
+f_out.close()
+```
+
+Kao što smo već opisali, za svakog studenta kreirana je posebna datoteka. Cijela skripta prikazana je u nastavku.
+
+## Vaš zadatak
+
+Vaš zadatak je razumijeti kod za šifriranje/enkripciju koji je dan u nastavku, te kreirati novu skriptu koja će dešifrirati/dekriptirati _ciphertext_ koji se nalazi u odgovarajućoj datoteci u direktoriju [Studenti](Studenti). U osnovi trebate kreirati funkciju `decrypt` koja će invertirati postupak enkripcije (inverzna funkcija funkcije `encrypt`).
+
+> **VAŽNO:**  
+> Za potrebe rada s kriptografskim primitivima (enkripcijskim algoritmima te kriptografskim hash funkcijama) koristili smo Python modul [cryptography](https://cryptography.io). Na web stranicama modula dana su detaljna objašnjenja korištenja kriptografskih primitiva sa primjerima (receptima).
+
+> **U SLUČAJU PANIKE:**  
+> Na prvi pogled zadatak može izgledati _zastrašujuće_. Razlozi su višestruki: većini studentata ovo je prvi put da su izloženi problematici iz područja informacijske sigurnosti, na nastavi nismo niti ćemo pokriti sve detalje simetričnih kriptosustava, dio studenata prvi put koristi `python` ili nema previše iskustva s programiranjem, i dr. U osnovi, panici nema mjesta, tu su profesori koji će pokušati odgovoriti na sva vaša pitanja i voditi vas kroz zadatak.  
+> Ideja zadatka je usvojiti osnovnu terminologiju simetričnih kriptosustava kroz praktičan rad.
 
 ```python
 # file encrypt_lab2.py
@@ -49,12 +74,11 @@ from cryptography.hazmat.primitives.ciphers import (
     modes,
 )
 from cryptography.hazmat.primitives import (
-	hashes,
-	padding
+    hashes,
+    padding
 )
 from cryptography.hazmat.backends import default_backend
 import os
-import base64
 
 
 KEY_BLOCK_SIZE = 32

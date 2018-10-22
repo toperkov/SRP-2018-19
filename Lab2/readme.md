@@ -1,5 +1,5 @@
 
-# Crypto challenge - Simetrična kriptografija
+# SRP - Lab 2: Crypto challenge - Simetrična kriptografija
 
 U sklopu današnje vježbe student će morati riješiti *crypto challenge*. Rješenje se može realizirati u bilo kojem programskom jeziku, ali preporučujemo korištenje ``python`` programskog okruženja. Ova vježba upoznaje studente sa osnovama **simetrične kriptografije**, točnije za blok šiframa fiksne duljine koji se danas koriste u većini modernih kriptografskih sustava.
 

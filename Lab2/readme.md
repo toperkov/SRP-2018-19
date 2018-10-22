@@ -38,7 +38,7 @@ enc = encrypt(key, iv, str.encode(QUOTE))
 
 ## Zadatak
 
-U nastavku se nalazi jednostavan python modul ``encrypt_lab2.py`` koji je korišten za šifriranje teksta/vica. Vaš zadatak je razumijeti kod za šifriranje koji je dan u nastavku, te kreirati modul (skriptu) koja će dešifrirati tekst koji se nalazi u datoteci u direktoriju [Studenti](Studenti).
+U nastavku se nalazi jednostavan python modul ``encrypt_lab2.py`` koji je korišten za šifriranje teksta/vica. Vaš zadatak je razumijeti kod za šifriranje koji je dan u nastavku, te kreirati modul (skriptu) koja će dešifrirati tekst koji se nalazi u datoteci u direktoriju [Studenti](Studenti). **HINT:** Za potrebe rada s kriptografskim primitivima (enkripcijskim algoritmima te kriptografskim hash funkcijama) koristili smo Python paket [cryptography](https://cryptography.io), koji nudi objašnjenje korištenja kriptografskih primitiva sa primjerima (receptima).
 
 ```python
 # file encrypt_lab2.py

@@ -46,9 +46,8 @@ Navedena skripta potom pohranjuje dobiveni _ciphertext_, enkripcijski ključ, in
 
 ```python
 f_out = open(filename + ".enc", 'wb')
-f_out.write(key)
-f_out.write(iv)
-f_out.write(enc)
+content_to_write = base64.b64encode(key + iv + enc)
+f_out.write(content_to_write)
 f_out.close()
 ```
 
@@ -79,6 +78,7 @@ from cryptography.hazmat.primitives import (
 )
 from cryptography.hazmat.backends import default_backend
 import os
+import base64
 
 
 KEY_BLOCK_SIZE = 32
@@ -118,8 +118,7 @@ if __name__ =='__main__':
     enc = encrypt(key, iv, str.encode(QUOTE))
 
     f_out = open(filename + ".enc", 'wb')
-    f_out.write(key)
-    f_out.write(iv)
-    f_out.write(enc)
+    content_to_write = base64.b64encode(key + iv + enc)
+    f_out.write(content_to_write)
     f_out.close()
 ```

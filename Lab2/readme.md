@@ -3,20 +3,20 @@
 
 U sklopu današnje vježbe student će morati riješiti *crypto challenge*. Rješenje se može realizirati u bilo kojem programskom jeziku, ali preporučujemo korištenje ``python`` programskog okruženja. Ova vježba upoznaje studente sa osnovama **simetrične kriptografije**, točnije za blok šiframa fiksne duljine koji se danas koriste u većini modernih kriptografskih sustava.
 
-Jedna od najpopularnijih ekripcijskih algoritama koji implementira blok šifre fiksne duljine je **AES** algoritam, koji podupire rad s blokovima duljine 128 bitova i ključevima duljine 128, 192 i 256 bitova. Blok šifra u osnovi "razbije" ulaznu poruku u seriju sekvencijalnih blokova odgovarajuće dužine (npr. 128 bita), te procesira ove blokove po principu "jedan po jedan". Kod **AES-CBC** enkripcijskog moda plantext blokovi ulančavaju (eng. *chaining*) kako je prikazano na slici u nastavku.
+Jedna od najpopularnijih ekripcijskih algoritama koji implementira blok šifre fiksne duljine je **AES** algoritam, te podupire rad s blokovima duljine 128 bitova i ključevima duljine 128, 192 i 256 bitova. Blok šifra u osnovi "razbije" ulaznu poruku u seriju sekvencijalnih blokova odgovarajuće dužine (npr. 128 bita), te procesira ove blokove po principu "jedan po jedan". Kod **AES-CBC** enkripcijskog moda plantext blokovi ulančavaju (eng. *chaining*) kako je prikazano na slici u nastavku.
 
 <p align="center">
   <img width="500" src="https://raw.githubusercontent.com/mcagalj/CNS-2017-18/master/img/cbc.PNG">
 </p>
 
-Zadatak studenta je dešifrirati tekst/vic enkriptiran **AES** šifrom u **CBC** enkripcijskom modu. Za svakog studenta je kreirana datoteka u direktoriju Studenti na github repozitoriju koja sadrži šifrirani tekst. Ime datoteke je kreirano korištenjem kriptografske hash funkcije **SHA-256** na sljedeći način:
+Zadatak studenta je dešifrirati tekst/vic enkriptiran **AES** šifrom u **CBC** enkripcijskom modu. Za svakog studenta je kreirana datoteka u direktoriju [Studenti](Studenti) na github repozitoriju koja sadrži šifrirani tekst. Kako bi student znao koja datoteka njemu pripada naziv datoteke je kreirano korištenjem kriptografske hash funkcije **SHA-256** na sljedeći način:
 
 
 ```python
 hash("PerkovicToni" + "SALT") = f3f496e59923ea2f120edbe0b603fac4719bb01e250e9534e401af6f1edb0a5e
 ```
 
-gdje je ``SALT`` vrijednost koju će vam profesori dati na vježbama. **NAPOMENA:** Primjetite kako nema razmaka između prezimena i imena te nisu korištena HR slova (čćžšđ) te je ime studenta formatirano na sljedeći način: ``PrezimeIme``. Da biste saznali ime datoteke koje pripada svakom studentu, u python okruženju napravite sljedeće:
+gdje je ``SALT`` vrijednost koju će vam profesori dati na vježbama. **NAPOMENA:** Primjetite kako nema razmaka između prezimena i imena te nisu korištena HR slova (čćžšđ) dok je ime studenta formatirano po principu ``PrezimeIme``. Da biste saznali ime datoteke koje pripada svakom studentu, u python okruženju napravite sljedeće:
 
 ```python
 >>> from cryptography.hazmat.primitives import hashes
@@ -63,14 +63,14 @@ IV_BLOCK_SIZE = 16
 CIPHER = algorithms.AES
 
 STUDENTNAME = "PerkovicToni" # ne koriste se HR slova (čćžšđ)
-SALT = "!ASK_PROFESSOR!" # pitajte profesora za sol
+SALT = "!ASK_PROFESSOR!" # pitajte profesora na vježbama
 
 QUOTE = "The lock on the old door could only take short keys"
 
 
 def encrypt(key, iv, plaintext):
     ''' Function encrypt '''
-    
+
     padder = padding.PKCS7(CIPHER_BLOCK_LENGTH).padder()
     padded_plaintext = padder.update(plaintext)
     padded_plaintext += padder.finalize()

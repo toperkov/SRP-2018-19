@@ -4,7 +4,7 @@ U sklopu vježbe student će riješiti jednostavan _crypto_ izazov. Student će 
 
 ## Uvod
 
-Zadatak studenta je dešifrirati dani _ciphertext_ dobiven enkripcijom odgovarajućeg _plaintext_-a. Za enkripciju je korištena AES šifra/enkripcijski algoritam u tzv. CBC enkripcijskom modu; student ne treba poznavati detalje AES algoritma ni CBC moda za uspješno rješavanje zadatka.
+Zadatak studenta je dešifrirati dani _ciphertext_ dobiven enkripcijom odgovarajućeg _plaintext_-a. Za enkripciju je korištena AES šifra/enkripcijski algoritam u tzv. CTR enkripcijskom modu; student ne treba poznavati detalje AES algoritma ni CTR moda za uspješno rješavanje zadatka.
 
 Za svakog studenta kreirana je datoteka u direktoriju [Studenti](Studenti) koja sadrži šifrirani _plaintext_. Datoteke imaju ekstenziju `.enc` a ime datoteke generirano je primjenom kriptografske _hash_ funkcije SHA-256 kako je prikazano u nastavku:
 
@@ -46,7 +46,7 @@ Navedena skripta potom pohranjuje dobiveni _ciphertext_, enkripcijski ključ, in
 
 ```python
 f_out = open(filename + ".enc", 'wb')
-content_to_write = base64.b64encode(enc + key + iv)
+content_to_write = base64.b64encode(iv + enc + key)
 f_out.write(content_to_write)
 f_out.close()
 ```
@@ -99,13 +99,9 @@ def encrypt(key, iv, plaintext):
     padded_plaintext = padder.update(plaintext)
     padded_plaintext += padder.finalize()
 
-    cipher = Cipher(CIPHER(key), modes.CBC(iv), backend=default_backend())
+    cipher = Cipher(CIPHER(key), modes.CTR(iv), backend=default_backend())
     encryptor = cipher.encryptor()
-    ciphertext_1 = encryptor.update(padded_plaintext)
-    ciphertext_1 += encryptor.finalize()
-
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(ciphertext_1)
+    ciphertext = encryptor.update(padded_plaintext)
     ciphertext += encryptor.finalize()
 
     return ciphertext
@@ -122,7 +118,7 @@ if __name__ =='__main__':
     enc = encrypt(key, iv, str.encode(QUOTE))
 
     f_out = open(filename + ".enc", 'wb')
-    content_to_write = base64.b64encode(enc + key + iv)
+    content_to_write = base64.b64encode(iv + enc + key)
     f_out.write(content_to_write)
     f_out.close()
 ```

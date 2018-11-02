@@ -72,10 +72,7 @@ from cryptography.hazmat.primitives.ciphers import (
     algorithms,
     modes,
 )
-from cryptography.hazmat.primitives import (
-    hashes,
-    padding
-)
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 import os
 import base64
@@ -95,13 +92,9 @@ QUOTE = "The lock on the old door could only take short keys"
 def encrypt(key, iv, plaintext):
     ''' Function encrypt '''
 
-    padder = padding.PKCS7(CIPHER_BLOCK_LENGTH).padder()
-    padded_plaintext = padder.update(plaintext)
-    padded_plaintext += padder.finalize()
-
     cipher = Cipher(CIPHER(key), modes.CTR(iv), backend=default_backend())
     encryptor = cipher.encryptor()
-    ciphertext_1 = encryptor.update(padded_plaintext)
+    ciphertext_1 = encryptor.update(plaintext)
     ciphertext_1 += encryptor.finalize()
 
     encryptor = cipher.encryptor()

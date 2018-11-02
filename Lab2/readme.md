@@ -46,7 +46,7 @@ Navedena skripta potom pohranjuje dobiveni _ciphertext_, enkripcijski ključ, in
 
 ```python
 f_out = open(filename + ".enc", 'wb')
-content_to_write = base64.b64encode(iv + enc + key)
+content_to_write = base64.b64encode(key + enc + iv)
 f_out.write(content_to_write)
 f_out.close()
 ```
@@ -101,7 +101,11 @@ def encrypt(key, iv, plaintext):
 
     cipher = Cipher(CIPHER(key), modes.CTR(iv), backend=default_backend())
     encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(padded_plaintext)
+    ciphertext_1 = encryptor.update(padded_plaintext)
+    ciphertext_1 += encryptor.finalize()
+
+    encryptor = cipher.encryptor()
+    ciphertext = encryptor.update(ciphertext_1)
     ciphertext += encryptor.finalize()
 
     return ciphertext
@@ -118,7 +122,7 @@ if __name__ =='__main__':
     enc = encrypt(key, iv, str.encode(QUOTE))
 
     f_out = open(filename + ".enc", 'wb')
-    content_to_write = base64.b64encode(iv + enc + key)
+    content_to_write = base64.b64encode(key + enc + iv)
     f_out.write(content_to_write)
     f_out.close()
 ```

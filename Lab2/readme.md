@@ -72,7 +72,10 @@ from cryptography.hazmat.primitives.ciphers import (
     algorithms,
     modes,
 )
-from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import (
+    hashes,
+    padding
+)
 from cryptography.hazmat.backends import default_backend
 import os
 import base64

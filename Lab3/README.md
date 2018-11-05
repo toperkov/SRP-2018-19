@@ -84,8 +84,6 @@ KDF = PBKDF2HMAC(
 )
 key = KDF.derive(passcode)
 
-challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
-
 iv = urandom(16)
 ciphertext = encrypt_CTR(key, iv, CHALLENGE)
 ```
@@ -93,6 +91,7 @@ ciphertext = encrypt_CTR(key, iv, CHALLENGE)
 Navedena skripta potom pohranjuje dobiveni *ciphertext* i inicijalizacijski vektor u odgovarajuću datoteku.
 
 ```python
+challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
 with open(challenge_file_name, 'w') as f:
     content_to_write = iv + ciphertext
     f.write(content_to_write.hex())
@@ -171,13 +170,11 @@ if __name__ =='__main__':
     )
     key = KDF.derive(passcode)
 
-    challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
-
     iv = urandom(16)
     ciphertext = encrypt_CTR(key, iv, CHALLENGE)
 
+    challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
     with open(challenge_file_name, 'w') as f:
         content_to_write = iv + ciphertext
         f.write(content_to_write.hex())
-
 ```

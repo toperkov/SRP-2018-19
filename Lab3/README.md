@@ -33,6 +33,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from os import path
 from os import urandom
+import base64
 
 
 STUDENTNAME = "PerkovicToni" # ne koriste se HR slova (čćžšđ)
@@ -57,8 +58,9 @@ if __name__ =='__main__':
 
     # Save hash challenge to file
     passcode_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.hash'
-    with open(passcode_file_name, 'w') as f:
-        f.write(hash_value.hex())
+    with open(passcode_file_name, 'wb') as f:
+        content_to_write = base64.b64encode(hash_value)
+        f.write(content_to_write)
 ```
 
 ## Zadatak 2.
@@ -79,7 +81,7 @@ KDF = PBKDF2HMAC(
     algorithm=hashes.SHA256(),
     length=32,
     salt=b'salt',
-    iterations=100000,
+    iterations=50000,
     backend=default_backend()
 )
 key = KDF.derive(passcode)
@@ -92,9 +94,9 @@ Navedena skripta potom pohranjuje dobiveni *ciphertext* i inicijalizacijski vekt
 
 ```python
 challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
-with open(challenge_file_name, 'w') as f:
-    content_to_write = iv + ciphertext
-    f.write(content_to_write.hex())
+with open(challenge_file_name, 'wb') as f:
+    content_to_write = base64.b64encode(iv + ciphertext)
+    f.write(content_to_write
 ```
 
 
@@ -113,6 +115,7 @@ from cryptography.hazmat.primitives.ciphers import algorithms, modes, Cipher
 from cryptography.hazmat.backends import default_backend
 from os import path
 from os import urandom
+import base64
 
 
 STUDENTNAME = "PerkovicToni" # ne koriste se HR slova (čćžšđ)
@@ -165,7 +168,7 @@ if __name__ =='__main__':
         algorithm=hashes.SHA256(),
         length=32,
         salt=b'salt',
-        iterations=100000,
+        iterations=50000,
         backend=default_backend()
     )
     key = KDF.derive(passcode)
@@ -174,7 +177,7 @@ if __name__ =='__main__':
     ciphertext = encrypt_CTR(key, iv, CHALLENGE)
 
     challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
-    with open(challenge_file_name, 'w') as f:
-        content_to_write = iv + ciphertext
-        f.write(content_to_write.hex())
+    with open(challenge_file_name, 'wb') as f:
+        content_to_write = base64.b64encode(iv + ciphertext)
+        f.write(content_to_write)
 ```

@@ -96,7 +96,7 @@ Navedena skripta potom pohranjuje dobiveni *ciphertext* i inicijalizacijski vekt
 challenge_file_name = hash_me(str.encode(STUDENTNAME + SALT), hashes.SHA256()).hex() + '.enc'
 with open(challenge_file_name, 'wb') as f:
     content_to_write = base64.b64encode(iv + ciphertext)
-    f.write(content_to_write
+    f.write(content_to_write)
 ```
 
 

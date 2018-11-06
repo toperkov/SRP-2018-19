@@ -7,3 +7,4 @@ U ovom repozitoriju objavljivat ćemo zadatke, upute, isječke kodova, konfigura
 ## Uputstva
 
 - [Lab 2 - Crypto challenge - Simetrična kriptografija](/Lab2/readme.md)
+- [Lab 3 - Hash funkcije](/Lab3/README.md)
